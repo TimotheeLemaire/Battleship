@@ -1,0 +1,13 @@
+@media only screen and (max-width:900px){
+    .menuButton{
+        display: flex;
+    }
+}
+@media only screen and (min-width:900px){
+    .menu{
+        display: none;
+    }
+    .menuButton{
+        visibility: hidden;
+    }
+}

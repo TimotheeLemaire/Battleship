@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand text-white" [routerLink]="['/']">Battleship</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link text-white" [routerLink]="['/browse']">Browse</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" [routerLink]="['/game']">Game</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" [routerLink]="['/saved']">Saved</a>
+      </li>
+    </ul>
+  </div>
+  <button class="navbar-toggler menuButton" type="button" (click)="toggleMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+<div class="menu navbar navbar-dark bg-primary" *ngIf="menuOppened">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link text-white" [routerLink]="['/browse']" (click)="toggleMenu()">Browse</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white" [routerLink]="['/game']" (click)="toggleMenu()">Game</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white" [routerLink]="['/saved']" (click)="toggleMenu()">Saved</a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,38 @@
+<div class="grid-container">
+  <div>
+    <h4 class="title">Opponent ships</h4>
+    <div class="player-grid">
+      <table>
+        <tr>
+          <th></th>
+          <th *ngFor="let letter of letters" [ngClass]="{'highlight':letter==hoverCol}">{{letter}}</th>
+        </tr>
+        <tr *ngFor="let indexRow of indices">
+          <th id=legend{{indexRow}} [ngClass]="{'highlight':indexRow==hoverRow}">{{indexRow}}</th>
+          <td *ngFor="let letter of letters" 
+          (click)="fire($event)"
+          (mouseenter)="highlight($event,true)" 
+          (mouseleave)="highlight($event,false)" 
+          id="grid1-{{letter+'-'+indexRow}}">
+            <i class="fa fa-times" *ngIf="targetGrid[letter][indexRow]"></i>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div>
+    <h4 class="title">Your ships</h4>
+    <div class="player-grid">
+      <table>
+        <tr>
+          <th></th>
+          <th *ngFor="let letter of letters">{{letter}}</th>
+        </tr>
+        <tr *ngFor="let indexRow of indices">
+          <th id="legend{{indexRow}}">{{indexRow}}</th>
+          <td *ngFor="let letter of letters" id="grid2-{{letter+'-'+indexRow}}"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
