@@ -28,6 +28,13 @@ table{
     height: 100%;
     width: 100%;
     table-layout: fixed;
+    padding: 2px;
+    margin: 2px;
+    border-spacing: 0px;
+}
+
+table tr:last-child{
+    border-bottom: solid whitesmoke 2px;
 }
 
 th{
@@ -37,20 +44,39 @@ th{
 }
 
 td{
-    border:solid whitesmoke 1px;
-    border-radius: 10%;
+    border: 2px solid whitesmoke;
+    border-radius: 5%;
     text-align: center;
-    background-color: cornflowerblue;
     height: 8%;
     width: 8%;
 }
 
 td:hover {
-    background-color: gray;
+    border: 3px solid gray;
 }
 
 .highlight{
     color: red;
+}
+
+.water{
+    background-color: cornflowerblue;
+}
+
+.selected{
+    background-color:darkgreen;
+}
+
+.valid{
+    background-color:green;
+}
+
+.projection{
+    background-color: gold;
+}
+
+.ship{
+    background-color: darkgray;
 }
 
 @media only screen and (max-width:900px){

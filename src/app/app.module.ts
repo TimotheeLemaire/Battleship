@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { BrowseComponent } from './browse/browse.component';
 import { GameComponent } from './game/game.component';
 import { SaveComponent } from './save/save.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SaveComponent } from './save/save.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

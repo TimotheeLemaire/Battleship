@@ -1,6 +1,7 @@
 <div class="grid-container">
-  <div>
+  <div *ngIf="!placement">
     <h4 class="title">Opponent ships</h4>
+    <hr>
     <div class="player-grid">
       <table>
         <tr>
@@ -20,8 +21,18 @@
       </table>
     </div>
   </div>
+  <div *ngIf="placement">
+    <h4>Ship left to place</h4>
+    <hr>
+    <div>
+      <p *ngFor="let key of shipsKeys">
+        {{key}} : {{ships[key]}}
+      </p>
+    </div>
+  </div>
   <div>
     <h4 class="title">Your ships</h4>
+    <hr>
     <div class="player-grid">
       <table>
         <tr>
@@ -30,7 +41,16 @@
         </tr>
         <tr *ngFor="let indexRow of indices">
           <th id="legend{{indexRow}}">{{indexRow}}</th>
-          <td *ngFor="let letter of letters" id="grid2-{{letter+'-'+indexRow}}"></td>
+          <td *ngFor="let letter of letters" 
+          id="grid2-{{letter+'-'+indexRow}}" 
+          (click)="place($event)"
+          [ngClass]="{'selected':origin!=null&&origin.getLetter()==[letter]&&origin.getNumber()==[indexRow],
+                      'water':fleetGrid[letter][indexRow]==states.empty,
+                      'valid':fleetGrid[letter][indexRow]==states.valid,
+                      'projection':fleetGrid[letter][indexRow]==states.projection,
+                      'ship':fleetGrid[letter][indexRow]==states.ship}"
+          (mouseenter)="highlightProjection($event,states.projection)" 
+          (mouseleave)="highlightProjection($event,states.valid)"></td>
         </tr>
       </table>
     </div>
