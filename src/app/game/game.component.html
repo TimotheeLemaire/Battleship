@@ -14,8 +14,12 @@
           (click)="fire($event)"
           (mouseenter)="highlight($event,true)" 
           (mouseleave)="highlight($event,false)" 
-          id="grid1-{{letter+'-'+indexRow}}">
-            <i class="fa fa-times" *ngIf="targetGrid[letter][indexRow]"></i>
+          id="grid1-{{letter+'-'+indexRow}}"
+          [ngClass]="{'water':targetGrid[letter][indexRow]==targetStates.clear,
+                      'miss':targetGrid[letter][indexRow]==targetStates.miss,
+                      'hit':targetGrid[letter][indexRow]==targetStates.hit,
+                      'sunk':targetGrid[letter][indexRow]==targetStates.sunk}">
+            <!-- <i class="fa fa-times" *ngIf="targetGrid[letter][indexRow]!=targetStates.clear"></i> -->
           </td>
         </tr>
       </table>
@@ -26,7 +30,7 @@
     <hr>
     <div>
       <p *ngFor="let key of shipsKeys">
-        {{key}} : {{ships[key]}}
+        {{key}} : {{shipToPlace[key]}}
       </p>
     </div>
   </div>
@@ -48,7 +52,8 @@
                       'water':fleetGrid[letter][indexRow]==states.empty,
                       'valid':fleetGrid[letter][indexRow]==states.valid,
                       'projection':fleetGrid[letter][indexRow]==states.projection,
-                      'ship':fleetGrid[letter][indexRow]==states.ship}"
+                      'ship':fleetGrid[letter][indexRow]==states.ship,
+                      'shipEnd':fleetGrid[letter][indexRow]==states.shipEnd}"
           (mouseenter)="highlightProjection($event,states.projection)" 
           (mouseleave)="highlightProjection($event,states.valid)"></td>
         </tr>
