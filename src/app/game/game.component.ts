@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms'
 import { Carrier, Battleship, Cruiser, Destroyer, Submarine, Ship, Orientation } from '../models/ships.model'
 import { Position } from '../models/position.model'
 import { GameService } from '../game.service'
-import { observable } from 'rxjs';
+import { Hit, Results } from '../models/hit.model';
+import { game } from '../models/game.model';
 
 export enum states {
   empty,
@@ -11,8 +11,9 @@ export enum states {
   projection,
   ship,
   shipEnd,
+  miss,
+  hit,
 }
-
 
 export enum targetStates {
   clear,
@@ -55,22 +56,44 @@ export class GameComponent implements OnInit {
     this.gameService=gameService;
   }
 
+  playerTurn:Boolean;
+
   ngOnInit(){
 
-    this.gameService.shipsToPlace.subscribe(ships =>{
-      this.shipToPlace = ships;
-      this.shipsKeys = Object.keys(this.shipToPlace);
-    });
+    if(this.gameService.currentGame==null){
+      this.gameService.postNewGame();
+    }
 
+    if(this.gameService.allShipPlaced()){
+      this.placement = false;
+    } else {
+      this.placement = true;
+    }
+    
+    this.shipToPlace = this.gameService.shipsToPlace
+    this.shipsKeys = Object.keys(this.shipToPlace);
+    
     this.states = states;
     this.targetStates = targetStates;
     
     this.indices = Position.indices;
     this.letters = Position.letters;
 
+    this.gameService.playerTurn.subscribe(value =>{
+      this.playerTurn = value;
+      console.log("player Turn :"+value);
+    })
+    
     this.initGrid();
+    this.drawShips();
 
-    this.placement = true;
+    this.gameService.Hit.subscribe( hit => {
+      this.updateTarget(hit);
+    });
+
+    this.gameService.opponentHit.subscribe( hit => {
+      this.updateFleet(hit);
+    })
   }
 
   initGrid(){
@@ -104,24 +127,82 @@ export class GameComponent implements OnInit {
   }
 
   fire(event){
-    var target = event.target.id.split("-",3);
-    var letter = target[1];
-    var number:string = target[2];
-    if(this.targetGrid[letter][number]==targetStates.clear){
+    if(this.playerTurn){
 
-      //local testing
-      var affectedShip=this.gameService.saveHit(new Position(letter,Number(number)));
-      if(affectedShip!=null){
-        if(this.gameService.isShipSunk(affectedShip)){
-          affectedShip.toPositionArray().forEach(element => {
-            this.targetGrid[element.getLetter()][element.getNumber()]=targetStates.sunk;
-          });
-        } else {
-          this.targetGrid[letter][number]=targetStates.hit;
-        }
-      } else {
-        this.targetGrid[letter][number]=targetStates.miss;
+      console.log(this.playerTurn);
+      var target = event.target.id.split("-",3);
+      var letter = target[1];
+      var number:string = target[2];
+      if(this.targetGrid[letter][number]==targetStates.clear){
+       
+        this.gameService.postHit(new Position(letter,Number(number)));
+
       }
+      //local testing
+      // var affectedShip=this.gameService.saveHit(new Position(letter,Number(number)));
+      // if(affectedShip!=null){
+      //   if(this.gameService.isShipSunk(affectedShip)){
+      //     affectedShip.toPositionArray().forEach(element => {
+      //       this.targetGrid[element.getLetter()][element.getNumber()]=targetStates.sunk;
+      //     });
+      //   } else {
+      //     this.targetGrid[letter][number]=targetStates.hit;
+      //   }
+      // } else {
+      //   this.targetGrid[letter][number]=targetStates.miss;
+      // }
+    }
+  }
+
+  colorTargetPosition(pos,state:targetStates){
+    if(pos!=null){
+      console.log(pos);
+      this.targetGrid[pos.letter][pos.number]=state;
+    }
+  }
+
+  colorFleetPosition(pos,state:states){
+    if(pos!=null){
+      console.log(pos);
+      this.fleetGrid[pos.letter][pos.number]=state;
+    }
+  }
+
+  updateTarget(hit:Hit){
+    var res = Results[hit.result];
+    switch(res){
+      case Results.MISS:
+        this.colorTargetPosition(hit.target,targetStates.miss);
+        break;
+      case Results.HIT:
+        this.colorTargetPosition(hit.target,targetStates.hit);
+        break;
+      case Results.SINK:
+        this.colorTargetPosition(hit.target,targetStates.sunk);
+        //TODO Update whole ship.
+        break;
+      default:
+        console.log(res);
+        break;
+    }
+  }
+
+  updateFleet(hit:Hit){
+    var res = Results[hit.result];
+    switch(res){
+      case Results.MISS:
+        this.colorFleetPosition(hit.target,states.miss);
+        break;
+      case Results.HIT:
+        this.colorFleetPosition(hit.target,states.hit);
+        break;
+      case Results.SINK:
+        this.colorFleetPosition(hit.target,states.hit);
+        //TODO Update whole ship.
+        break;
+      default:
+        console.log(res);
+        break;
     }
   }
 
@@ -342,14 +423,10 @@ export class GameComponent implements OnInit {
           return;
         }
       }
-      this.gameService.shipsToPlace
       this.gameService.saveShip(newShip);
-      var shipsRemaining = 0;
-      this.shipsKeys.forEach(key => {
-        shipsRemaining += this.shipToPlace[key];
-      });
-      if (shipsRemaining == 0){
+      if(this.gameService.allShipPlaced()){
         this.placement=false;
+        this.gameService.putFleet();
       }
     }
   }

@@ -2,14 +2,14 @@
   <div *ngIf="!placement">
     <h4 class="title">Opponent ships</h4>
     <hr>
-    <div class="player-grid">
+    <div class="player-grid" [ngClass]="{'active':playerTurn}">
       <table>
         <tr>
-          <th></th>
+          <th class="other"></th>
           <th *ngFor="let letter of letters" [ngClass]="{'highlight':letter==hoverCol}">{{letter}}</th>
         </tr>
         <tr *ngFor="let indexRow of indices">
-          <th id=legend{{indexRow}} [ngClass]="{'highlight':indexRow==hoverRow}">{{indexRow}}</th>
+          <th id=legend{{indexRow}} [ngClass]="{'highlight':indexRow==hoverRow}" class="label-number">{{indexRow}}</th>
           <td *ngFor="let letter of letters" 
           (click)="fire($event)"
           (mouseenter)="highlight($event,true)" 
@@ -37,14 +37,14 @@
   <div>
     <h4 class="title">Your ships</h4>
     <hr>
-    <div class="player-grid">
+    <div class="player-grid" [ngClass]="{'active':!placement&&!playerTurn}">
       <table>
         <tr>
           <th></th>
           <th *ngFor="let letter of letters">{{letter}}</th>
         </tr>
         <tr *ngFor="let indexRow of indices">
-          <th id="legend{{indexRow}}">{{indexRow}}</th>
+          <th id="legend{{indexRow}}" class="label-number">{{indexRow}}</th>
           <td *ngFor="let letter of letters" 
           id="grid2-{{letter+'-'+indexRow}}" 
           (click)="place($event)"
@@ -53,7 +53,9 @@
                       'valid':fleetGrid[letter][indexRow]==states.valid,
                       'projection':fleetGrid[letter][indexRow]==states.projection,
                       'ship':fleetGrid[letter][indexRow]==states.ship,
-                      'shipEnd':fleetGrid[letter][indexRow]==states.shipEnd}"
+                      'shipEnd':fleetGrid[letter][indexRow]==states.shipEnd,
+                      'miss':fleetGrid[letter][indexRow]==states.miss,
+                      'hit':fleetGrid[letter][indexRow]==states.hit}"
           (mouseenter)="highlightProjection($event,states.projection)" 
           (mouseleave)="highlightProjection($event,states.valid)"></td>
         </tr>

@@ -29,9 +29,6 @@ export abstract class Ship {
     getOrientation(){
         return this.orientation;
     }
-    setDestroyed(){
-        this.destroyed = true;
-    }
     toPositionArray(){
         var i:number;
         var positions:Position[] = [];

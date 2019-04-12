@@ -1,3 +1,6 @@
-<p>
-  browse works!
-</p>
+<div class="container">
+  <button *ngFor="let game of games" class="btn game-button" (click)=joinGame(game)>
+    <span>Creator : <b>{{game.p1.name}}</b></span>
+    <span>Game ID : <b>{{game.id}}</b></span>
+  </button>
+</div>

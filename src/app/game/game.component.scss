@@ -24,6 +24,10 @@
     padding-left: 0em;
 }
 
+.active{
+    border: solid green 5px;
+}
+
 table{
     height: 100%;
     width: 100%;
@@ -35,6 +39,22 @@ table{
 
 table tr:last-child{
     border-bottom: solid whitesmoke 2px;
+}
+
+table tr:first-child{
+    border-bottom: solid whitesmoke 3px;
+}
+
+table tr:last-child th{
+    border: solid whitesmoke 1px;
+    padding: 0px;
+    text-align: center;
+}
+
+.label-number{
+    border: solid whitesmoke 2px;
+    padding: 0px;
+    text-align: center;
 }
 
 th{
